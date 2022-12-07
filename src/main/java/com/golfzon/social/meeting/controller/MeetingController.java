@@ -1,15 +1,14 @@
 package com.golfzon.social.meeting.controller;
 
+import com.golfzon.social.meeting.dto.MeetingDto;
 import com.golfzon.social.meeting.service.MeetingService;
+import com.golfzon.social.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.StandardCharsets;
 
@@ -19,26 +18,56 @@ import java.nio.charset.StandardCharsets;
 @RequestMapping("/meeting")
 public class MeetingController {
 
-    private final MeetingService companyService;
+    private final MeetingService meetingService;
 
-    //
+    //모임개설하기
     @PostMapping(value = "/post")
-    public ResponseEntity<String> meetingPost() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        log.info("principal:{}",principal);
-        //Member member = ((UserDetailsImpl)principal).getMember();
+    public ResponseEntity<String> postMeeting(MeetingDto.Request request,
+                                              @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         return ResponseEntity.ok()
                 .contentType(new MediaType("application", "json", StandardCharsets.UTF_8))
-                .body("result : ");
+                .body(meetingService.postMeeting(request, userDetails.getMember()));
     }
 
-    //
-    @GetMapping(value = "/")
-    public ResponseEntity<String> companySelectAll() {
+    //모임 소개 정보조회
+    @GetMapping(value = "/{meetingId}/details")
+    public ResponseEntity<MeetingDto.Response> getMeeting(@PathVariable(name = "meetingId") Long meetingId,
+                                                          @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        // 업체 신청 목록보기
         return ResponseEntity.ok()
-                .body("result : ");
+                .body(meetingService.getMeeting(meetingId, userDetails.getMember()));
     }
+
+
+    //모임가입하기
+    @PostMapping(value = "/{meetingId}/signup")
+    public ResponseEntity<MeetingDto.Role> signupMeeting(@PathVariable(name = "meetingId") Long meetingId,
+                                                         @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        return ResponseEntity.ok()
+                .contentType(new MediaType("application", "json", StandardCharsets.UTF_8))
+                .body(meetingService.signupMeeting(meetingId, userDetails.getMember()));
+    }
+
+    //모임 수정하기
+    @PutMapping(value = "/{meetingId}/update")
+    public ResponseEntity<String> updateMeeting(@PathVariable(name = "meetingId") Long meetingId, MeetingDto.Request request,
+                                                @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        return ResponseEntity.ok()
+                .contentType(new MediaType("application", "json", StandardCharsets.UTF_8))
+                .body(meetingService.updateMeeting(meetingId, request, userDetails.getMember()));
+    }
+
+    //모임 삭제하기
+    @DeleteMapping(value = "/{meetingId}/delete")
+    public ResponseEntity<String> deleteMeeting(@PathVariable(name = "meetingId") Long meetingId,
+                                                @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        return ResponseEntity.ok()
+                .contentType(new MediaType("application", "json", StandardCharsets.UTF_8))
+                .body(meetingService.deleteMeeting(meetingId, userDetails.getMember()));
+    }
+
 }

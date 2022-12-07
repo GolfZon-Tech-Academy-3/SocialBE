@@ -8,6 +8,7 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.golfzon.social.meeting.entity.Meeting;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,6 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -37,7 +39,7 @@ public class MeetingS3Service {
     @Value("${cloud.aws.region.static}")
     private String region;
 
-    private final String bucket = "spacez3";
+    private final String bucket = "spacez3"; //social2-bucket
 
     @PostConstruct
     public void setS3Client() {
@@ -67,6 +69,24 @@ public class MeetingS3Service {
         return imageUrl;
     }
 
+    //수정(+ 기존 s3에 있는 이미지 정보 삭제)
+    public String update(Meeting meeting, MultipartFile file) {
+        //이미지 삭제 후 재업로드
+        delete(meeting);
+        return upload(file);
+    }
+
+    //기존 s3에 있는 기존 이미지 정보, DB 정보 삭제
+    public void delete(Meeting meeting) {   //imageUrls 는 지우면 안되는 것들
+        log.info("meetingImage:{}"+meeting.getImageUrl());
+        String image = meeting.getImageUrl().replace("https://social2-bucket.s3.ap-northeast-2.amazonaws.com/", "");
+        boolean isExistObject = s3Client.doesObjectExist(bucket, image);
+        log.info("지워야할 파일이름 : {}",image);
+        log.info("isExistObject : {}",isExistObject);
+        if (isExistObject) {
+            s3Client.deleteObject(bucket, image);
+        }
+    }
 
     //파일명 난수화(unique)
     private String createFileName(String fileName) {

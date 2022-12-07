@@ -1,5 +1,6 @@
 package com.golfzon.social.member.entity;
 
+import com.golfzon.social.meeting.entity.MeetingMember;
 import com.golfzon.social.member.dto.SignupRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
