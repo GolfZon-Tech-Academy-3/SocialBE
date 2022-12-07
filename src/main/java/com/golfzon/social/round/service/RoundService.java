@@ -2,7 +2,9 @@ package com.golfzon.social.round.service;
 
 import com.golfzon.social.member.entity.Member;
 import com.golfzon.social.member.repository.MemberRepository;
+import com.golfzon.social.round.dto.RoundListResponseDto;
 import com.golfzon.social.round.dto.RoundRequestDto;
+import com.golfzon.social.round.dto.RoundResponseDto;
 import com.golfzon.social.round.entity.Round;
 import com.golfzon.social.round.repository.RoundRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +12,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -72,5 +77,55 @@ public class RoundService {
         }
 
         roundRepository.save(round);
+    }
+
+    // 라운드 상세조회
+    public RoundResponseDto roundDetails(Long roundId, Member member) {
+
+        Member member1 = memberRepository.findById(member.getMemberId()).orElseThrow(()
+                -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "조회 권한이 없습니다."));
+
+        Round round = roundRepository.findById(roundId).orElseThrow(()
+                -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않은 라운드 입니다."));
+
+        RoundResponseDto responseDto = new RoundResponseDto();
+        responseDto.setExplanation(round.getExplanation());
+        responseDto.setRoundDate(round.getRoundDate());
+        responseDto.setRecruitStart(round.getRecruitStart());
+        responseDto.setRecruitEnd(round.getRecruitEnd());
+        responseDto.setLocation(round.getLocation());
+        responseDto.setDetails(round.getDetails());
+        responseDto.setGender(round.getGender());
+        responseDto.setMaxAge(round.getMaxAge());
+        responseDto.setMinAge(round.getMinAge());
+        responseDto.setPersonnel(round.getPersonnel());
+        // 현재 라운드에 속한 인원 수 조사 해서 추가
+
+        responseDto.setImageUrl(round.getImageUrl());
+
+        return responseDto;
+    }
+
+    // 라운드 목록 조회 리스트
+    public List<RoundListResponseDto> roundList(Member member) {
+
+        Member member1 = memberRepository.findById(member.getMemberId()).orElseThrow(()
+                -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "조회 권한이 없습니다."));
+
+        List<RoundListResponseDto> responseDtos = new ArrayList<>();
+//        List<Round> rounds = roundRepository.findAllByMeetingId();
+//
+//        for (Round data: rounds
+//             ) {
+//            RoundListResponseDto listResponseDto = new RoundListResponseDto();
+//            listResponseDto.setLocation(data.getLocation());
+//            listResponseDto.setRoundDate(data.getRoundDate());
+//            listResponseDto.setGender(data.getGender());
+//            listResponseDto.setRecruitStatus("모집중"); // 계산 필요
+//
+//            responseDtos.add(listResponseDto);
+//        }
+
+        return responseDtos;
     }
 }
