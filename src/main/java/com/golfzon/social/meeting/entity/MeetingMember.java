@@ -25,7 +25,7 @@ public class MeetingMember {
 //    @JoinColumn(name = "member_id", nullable = false)
 //    private Member member;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "meeting_id", nullable = false)
     private Meeting meeting;
 
@@ -35,6 +35,17 @@ public class MeetingMember {
     @Column(nullable = false)
     @ColumnDefault(value = "true")
     private Boolean permission; // 가입승낙여부(true: 승낙됨)
+
+    public MeetingMember(Meeting meeting, String role, boolean permission) {
+        this.meeting = meeting;
+        this.role = role;
+        this.permission = permission;
+    }
+
+    public MeetingMember(String role) {
+        this.role = role;
+    }
+
 
     @Override
     public String toString() {
