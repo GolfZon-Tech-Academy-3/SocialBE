@@ -1,5 +1,6 @@
 package com.golfzon.social.meeting.entity;
 
+import com.golfzon.social.member.entity.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,12 +22,12 @@ public class MeetingMember {
     @Column(name = "meeting_member_id")
     private Long meetingMemberId; // 모임회원 번호
 
-//    @ManyToOne
-//    @JoinColumn(name = "member_id", nullable = false)
-//    private Member member;
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "meeting_id", nullable = false)
+    @JoinColumn(nullable = false)
+    private Member member;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(nullable = false)
     private Meeting meeting;
 
     @Column(nullable = false)
@@ -36,7 +37,8 @@ public class MeetingMember {
     @ColumnDefault(value = "true")
     private Boolean permission; // 가입승낙여부(true: 승낙됨)
 
-    public MeetingMember(Meeting meeting, String role, boolean permission) {
+    public MeetingMember(Member member, Meeting meeting, String role, boolean permission) {
+        this.member = member;
         this.meeting = meeting;
         this.role = role;
         this.permission = permission;

@@ -29,8 +29,8 @@ public class Album {
     @Column(name = "member_id", nullable = false)
     private Long memberId; // 등록한 memberId
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "meeting_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(nullable = false)
     private Meeting meeting;
 
     public Album(Meeting meeting, String image, long memberId) {

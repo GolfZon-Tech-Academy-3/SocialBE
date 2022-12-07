@@ -3,6 +3,7 @@ package com.golfzon.social.member.repository;
 import com.golfzon.social.member.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member,Long> {
@@ -14,6 +15,8 @@ public interface MemberRepository extends JpaRepository<Member,Long> {
     Member findByMemberId(Long memberId);
 
     Optional<Member> findById(Long memberId);
+
+    List<Member> findAllByRole(String master);
 
 //    List<Member> findAllByAuthority(String authority);
 

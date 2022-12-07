@@ -23,6 +23,21 @@ public class MeetingDto {
         private Boolean permission;
         private Boolean secret;
         private String location;
+
+        @Override
+        public String toString() {
+            return "Request{" +
+                    "imageUrl=" + imageUrl +
+                    ", title='" + title + '\'' +
+                    ", explanation='" + explanation + '\'' +
+                    ", maxAge='" + maxAge + '\'' +
+                    ", minAge='" + minAge + '\'' +
+                    ", gender='" + gender + '\'' +
+                    ", permission=" + permission +
+                    ", secret=" + secret +
+                    ", location='" + location + '\'' +
+                    '}';
+        }
     }
 
 
