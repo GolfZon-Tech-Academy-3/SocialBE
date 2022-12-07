@@ -59,4 +59,19 @@ public class Member{
         this.imgUrl = signupRequestDto.getImgUrl();
         this.role = "member";
     }
+
+    @Override
+    public String toString() {
+        return "Member{" +
+                "memberId=" + memberId +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", age=" + age +
+                ", gender='" + gender + '\'' +
+                ", handy='" + handy + '\'' +
+                ", role='" + role + '\'' +
+                ", imgUrl='" + imgUrl + '\'' +
+                '}';
+    }
 }
