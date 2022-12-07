@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 
@@ -53,4 +54,19 @@ public class Round {
     @Column(nullable = false)
     private String imageUrl; // 라운드 대표 이미지
 
+    public Round(String explanation, String roundDate, String recruitStart,
+                 String recruitEnd, String location, String details, String minAge,
+                 String maxAge, String personnel, String gender, String imageUrl) {
+        this.explanation = explanation;
+        this.roundDate = roundDate;
+        this.recruitStart = recruitStart;
+        this.recruitEnd = recruitEnd;
+        this.location = location;
+        this.details = details;
+        this.minAge = minAge;
+        this.maxAge = maxAge;
+        this.personnel = personnel;
+        this.gender = gender;
+        this.imageUrl = imageUrl;
+    }
 }
