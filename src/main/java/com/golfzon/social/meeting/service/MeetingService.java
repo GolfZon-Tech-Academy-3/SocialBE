@@ -51,7 +51,7 @@ public class MeetingService {
         Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당하는 모임 아이디가 없습니다."));
         //로그인한 유저의 모임 역할 찾기
-        MeetingMember meetingMember = meetingMemberRePository.findByMember(member);
+        MeetingMember meetingMember = meetingMemberRePository.findByMemberAndMeeting(member, meeting);
         if(meetingMember == null){
             meetingMember = new MeetingMember("none");
         }
@@ -66,7 +66,7 @@ public class MeetingService {
         Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당하는 모임 아이디가 없습니다."));
         //로그인한 유저의 모임 역할 찾기
-        MeetingMember meetingMember = meetingMemberRePository.findByMember(member);
+        MeetingMember meetingMember = meetingMemberRePository.findByMemberAndMeeting(member, meeting);
         if(meetingMember != null){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 모임에 가입되어 있습니다.");
         } else {
@@ -91,7 +91,7 @@ public class MeetingService {
         Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당하는 모임 아이디가 없습니다."));
         //리더가 아니면 수정 불가
-        MeetingMember meetingMember = meetingMemberRePository.findByMember(member);
+        MeetingMember meetingMember = meetingMemberRePository.findByMemberAndMeeting(member, meeting);
         if(meetingMember==null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "모임에 가입되어 있지 않습니다.");
         if(!meetingMember.getRole().equals("leader")) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "리더 권한이 아닙니다.");
         //모임 이미지 S3에 저장
@@ -115,8 +115,10 @@ public class MeetingService {
 
     public String deleteMeeting(Long meetingId, Member member) {
         log.info("meetingId:{}",meetingId);
+        Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당하는 모임 아이디가 없습니다."));
         //리더가 아니면 삭제 불가
-        MeetingMember meetingMember = meetingMemberRePository.findByMember(member);
+        MeetingMember meetingMember = meetingMemberRePository.findByMemberAndMeeting(member, meeting);
         if(meetingMember == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "모임에 가입되어 있지 않습니다.");
         if(!meetingMember.getRole().equals("leader")) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "리더 권한이 아닙니다.");
         //DB에서 삭제
