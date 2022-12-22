@@ -29,7 +29,7 @@ public class Album {
     @Column(name = "member_id", nullable = false)
     private Long memberId; // 등록한 memberId
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private Meeting meeting;
 
